@@ -1,0 +1,220 @@
+{
+  "_meta": {
+    "description": "قاموس مرادفات قطع غيار السيارات - دارجة جزائرية / فرنسية / فصحى / إنجليزية",
+    "version": "1.0",
+    "last_updated": "2026-08-09",
+    "instructions": "أضف مرادفات جديدة داخل قائمة synonyms لأي قطعة. استخدم part_id فريد بالإنجليزية (بدون فراغات) لكل قطعة."
+  },
+  "parts": [
+    {
+      "part_id": "shock_absorber",
+      "standard_ar": "مساعد",
+      "standard_en": "Shock Absorber",
+      "category": "التعليق",
+      "synonyms": ["مساعد", "مساعدات", "أمورتيسور", "امورتيسور", "amortisseur", "shock", "shock absorber", "مساعد أمامي", "مساعد خلفي"]
+    },
+    {
+      "part_id": "coil_spring",
+      "standard_ar": "نابض",
+      "standard_en": "Coil Spring",
+      "category": "التعليق",
+      "synonyms": ["نابض", "ريسور", "ressort", "spring", "سوسط"]
+    },
+    {
+      "part_id": "strut_assembly",
+      "standard_ar": "مجموعة المساعد الكاملة",
+      "standard_en": "Strut Assembly",
+      "category": "التعليق",
+      "synonyms": ["كمبلي", "ensemble amortisseur", "strut", "مساعد كامل مع نابض"]
+    },
+    {
+      "part_id": "tie_rod_end",
+      "standard_ar": "رأس المقص",
+      "standard_en": "Tie Rod End",
+      "category": "التعليق والتوجيه",
+      "synonyms": ["رأس مقص", "روتيل", "rotule", "rotule de direction", "tie rod"]
+    },
+    {
+      "part_id": "control_arm",
+      "standard_ar": "ذراع التعليق",
+      "standard_en": "Control Arm",
+      "category": "التعليق",
+      "synonyms": ["ذراع", "براس", "bras", "bras de suspension", "triangle", "مثلث"]
+    },
+    {
+      "part_id": "ball_joint",
+      "standard_ar": "مفصلة الكرة",
+      "standard_en": "Ball Joint",
+      "category": "التعليق",
+      "synonyms": ["كروية", "روتيل سفلي", "rotule inferieure", "ball joint"]
+    },
+    {
+      "part_id": "stabilizer_link",
+      "standard_ar": "وصلة الموازن",
+      "standard_en": "Stabilizer Link",
+      "category": "التعليق",
+      "synonyms": ["بيال", "biellette", "biellette de barre stabilisatrice", "link"]
+    },
+    {
+      "part_id": "brake_pad",
+      "standard_ar": "فحمات الفرامل",
+      "standard_en": "Brake Pad",
+      "category": "الفرامل",
+      "synonyms": ["فرملة", "فحمات", "بلاطو", "plaquette", "plaquette de frein", "brake pad", "فحمة"]
+    },
+    {
+      "part_id": "brake_disc",
+      "standard_ar": "قرص الفرامل",
+      "standard_en": "Brake Disc",
+      "category": "الفرامل",
+      "synonyms": ["ديسك", "disque", "disque de frein", "brake disc", "طاسة الفرامل"]
+    },
+    {
+      "part_id": "brake_drum",
+      "standard_ar": "طنبورة الفرامل",
+      "standard_en": "Brake Drum",
+      "category": "الفرامل",
+      "synonyms": ["طنبورة", "tambour", "brake drum"]
+    },
+    {
+      "part_id": "brake_caliper",
+      "standard_ar": "ملقط الفرامل",
+      "standard_en": "Brake Caliper",
+      "category": "الفرامل",
+      "synonyms": ["كاليبر", "etrier", "etrier de frein", "caliper"]
+    },
+    {
+      "part_id": "alternator",
+      "standard_ar": "المولد",
+      "standard_en": "Alternator",
+      "category": "الكهرباء",
+      "synonyms": ["دينامو", "دينمو", "alternateur", "alternator", "مولد الكهرباء"]
+    },
+    {
+      "part_id": "starter_motor",
+      "standard_ar": "المنّاع",
+      "standard_en": "Starter Motor",
+      "category": "الكهرباء",
+      "synonyms": ["دومار", "دمار", "demarreur", "starter", "مطلاق"]
+    },
+    {
+      "part_id": "battery",
+      "standard_ar": "بطارية",
+      "standard_en": "Battery",
+      "category": "الكهرباء",
+      "synonyms": ["بطارية", "باتري", "batterie", "battery"]
+    },
+    {
+      "part_id": "spark_plug",
+      "standard_ar": "شمعة الإشعال",
+      "standard_en": "Spark Plug",
+      "category": "الكهرباء",
+      "synonyms": ["شمعة", "بوجي", "bougie", "spark plug", "بوجيات"]
+    },
+    {
+      "part_id": "ignition_lock",
+      "standard_ar": "قفل التشغيل",
+      "standard_en": "Ignition Lock",
+      "category": "الكهرباء",
+      "synonyms": ["نيمان", "antivol", "neiman", "ignition lock"]
+    },
+    {
+      "part_id": "air_filter",
+      "standard_ar": "فلتر الهواء",
+      "standard_en": "Air Filter",
+      "category": "الفلاتر",
+      "synonyms": ["فلتر هواء", "فيلتر air", "filtre a air", "filtre air", "air filter"]
+    },
+    {
+      "part_id": "oil_filter",
+      "standard_ar": "فلتر الزيت",
+      "standard_en": "Oil Filter",
+      "category": "الفلاتر",
+      "synonyms": ["فلتر زيت", "فيلتر زيت", "filtre a huile", "filtre huile", "oil filter"]
+    },
+    {
+      "part_id": "fuel_filter",
+      "standard_ar": "فلتر الوقود",
+      "standard_en": "Fuel Filter",
+      "category": "الفلاتر",
+      "synonyms": ["فلتر مازوت", "فلتر بنزين", "filtre a carburant", "filtre gasoil", "fuel filter"]
+    },
+    {
+      "part_id": "cabin_filter",
+      "standard_ar": "فلتر المكيف",
+      "standard_en": "Cabin Filter",
+      "category": "الفلاتر",
+      "synonyms": ["فلتر مكيف", "فلتر صالة", "filtre habitacle", "cabin filter"]
+    },
+    {
+      "part_id": "water_pump",
+      "standard_ar": "مضخة الماء",
+      "standard_en": "Water Pump",
+      "category": "المحرك والتبريد",
+      "synonyms": ["بومبا الماء", "pompe a eau", "water pump"]
+    },
+    {
+      "part_id": "oil_pump",
+      "standard_ar": "مضخة الزيت",
+      "standard_en": "Oil Pump",
+      "category": "المحرك والتبريد",
+      "synonyms": ["بومبا الزيت", "pompe a huile", "oil pump"]
+    },
+    {
+      "part_id": "fuel_pump",
+      "standard_ar": "مضخة البنزين",
+      "standard_en": "Fuel Pump",
+      "category": "المحرك والوقود",
+      "synonyms": ["بومبا البنزين", "pompe a essence", "fuel pump", "بومبة المازوت"]
+    },
+    {
+      "part_id": "radiator",
+      "standard_ar": "مشع التبريد",
+      "standard_en": "Radiator",
+      "category": "المحرك والتبريد",
+      "synonyms": ["رادياتور", "radiateur", "radiator"]
+    },
+    {
+      "part_id": "thermostat",
+      "standard_ar": "منظم الحرارة",
+      "standard_en": "Thermostat",
+      "category": "المحرك والتبريد",
+      "synonyms": ["تيرموستا", "thermostat"]
+    },
+    {
+      "part_id": "timing_belt",
+      "standard_ar": "حزام التوقيت",
+      "standard_en": "Timing Belt",
+      "category": "المحرك",
+      "synonyms": ["قاطينة", "courroie", "courroie de distribution", "timing belt"]
+    },
+    {
+      "part_id": "serpentine_belt",
+      "standard_ar": "حزام الدينامو",
+      "standard_en": "Serpentine Belt",
+      "category": "المحرك",
+      "synonyms": ["قاطينة الدينامو", "courroie d'accessoire", "serpentine belt"]
+    },
+    {
+      "part_id": "camshaft",
+      "standard_ar": "عمود الكامات",
+      "standard_en": "Camshaft",
+      "category": "المحرك",
+      "synonyms": ["عمود الكامات", "شجرة الكامات", "arbre a cames", "arbracame", "camshaft"]
+    },
+    {
+      "part_id": "fender",
+      "standard_ar": "الرفرف",
+      "standard_en": "Fender",
+      "category": "الهيكل الخارجي",
+      "synonyms": ["رفرف", "عيل", "ail", "aile", "fender"]
+    },
+    {
+      "part_id": "accordion_hose",
+      "standard_ar": "خرطوم السحب الأكوردبيون",
+      "standard_en": "Air Intake Accordion Hose",
+      "category": "المحرك والهيكل",
+      "synonyms": ["أكوردبيون", "مانشون", "accordion", "durite filtre", "durite filter", "durite"]
+    }
+  ]
+}

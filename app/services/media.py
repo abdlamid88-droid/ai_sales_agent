@@ -128,7 +128,18 @@ async def process_part_image(media_id: str) -> str:
         return ""
 
 def translate_part_name_terms(name: str) -> str:
-    """ترجمة مصطلحات قطع الغيار الفرنسية والعربية إلى الإنجليزية لتحسين البحث عن الصور"""
+    """ترجمة مصطلحات قطع الغيار بالدارجة الجزائرية والفرنسية والعربية إلى الإنجليزية لتحسين البحث عن الصور"""
+    if not name:
+        return ""
+    try:
+        from app.services.part_matcher import get_part_matcher
+        matcher = get_part_matcher()
+        res = matcher.find_part(name)
+        if res and res.standard_en:
+            return res.standard_en
+    except Exception as exc:
+        logging.warning("PartMatcher fallback error: %s", exc)
+
     terms = {
         'فلتر هواء': 'car panel air filter',
         'فلتر زيت': 'car oil filter',
@@ -465,12 +476,43 @@ async def fetch_online_part_image_url(oem_number: str = "", part_name: str = "")
         """
         Map part name keywords → a local static product photo.
         Used as the RIGHT panel of the dual-view card.
-        Multi-word keywords are checked first (most specific wins).
+        Uses PartMatcher first to resolve dialect terms, then falls back to keyword hints.
         """
         static_dir = os.path.join(project_root, "app", "static", "images")
         name_lower = (part_name or "").lower()
+
+        # 1. Try PartMatcher exact/fuzzy match
+        try:
+            from app.services.part_matcher import get_part_matcher
+            matcher = get_part_matcher()
+            res = matcher.find_part(part_name)
+            if res:
+                part_id_map = {
+                    "shock_absorber": "shock.jpg",
+                    "coil_spring": "shock.jpg",
+                    "strut_assembly": "shock.jpg",
+                    "air_filter": "air_filter.jpg",
+                    "oil_filter": "filter.jpg",
+                    "fuel_filter": "filter.jpg",
+                    "cabin_filter": "filter.jpg",
+                    "alternator": "alternateur.jpg",
+                    "ignition_lock": "antivol.jpg",
+                    "camshaft": "camshaft.jpg",
+                    "fender": "ail.jpg",
+                    "accordion_hose": "accordion.jpg",
+                    "brake_pad": "brake.jpg",
+                    "brake_disc": "brake.jpg",
+                    "brake_caliper": "brake.jpg",
+                }
+                if res.part_id in part_id_map:
+                    candidate = os.path.join(static_dir, part_id_map[res.part_id])
+                    if os.path.exists(candidate):
+                        return candidate
+        except Exception as exc:
+            logging.warning("PartMatcher _resolve_photo_path error: %s", exc)
+
+        # 2. Fallback to keyword hints
         hints = [
-            # multi-word / most specific first
             ("filtre air",    "air_filter.jpg"),
             ("filter air",    "air_filter.jpg"),
             ("filtre huile",  "filter.jpg"),

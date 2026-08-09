@@ -61,7 +61,19 @@ async def search_part_and_alternatives(query_text: str) -> dict:
     cleaned_query = clean_input_text(query_text)
     raw_query = query_text.strip() if query_text else ""
     keywords = extract_search_keywords(raw_query)
-    
+
+    # Dialect Synonym Expansion via PartMatcher
+    try:
+        from app.services.part_matcher import get_part_matcher
+        matcher = get_part_matcher()
+        res = matcher.find_part(raw_query)
+        if res:
+            for extra_kw in [res.standard_ar, res.standard_en, res.matched_synonym]:
+                if extra_kw and extra_kw not in keywords:
+                    keywords.append(extra_kw)
+    except Exception as exc:
+        pass
+
     if IS_SQLITE or asyncpg is None:
         return await _search_part_sqlite(raw_query, cleaned_query, keywords)
     else:
