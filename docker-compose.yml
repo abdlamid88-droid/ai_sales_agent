@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    container_name: ai_sales_agent_web
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./app:/code/app
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - db  # تأخير تشغيل الويب حتى تعمل قاعدة البيانات
+
+  db:
+    image: ankane/pgvector:latest  # صورة PostgreSQL جاهزة ومدمج معها pgvector
+    container_name: ai_sales_agent_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: sales_knowledge
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # لحفظ البيانات حتى لو توقفت الحاوية
+
+volumes:
+  pgdata:

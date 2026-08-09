@@ -1,0 +1,45 @@
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# SQLite Databases
+*.db
+*.sqlite
+*.sqlite3
+sales_agent.db
+test_auto_parts.db
+
+# Python & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Generated Media & Catalogs
+media/catalogs/*
+!media/catalogs/.gitkeep
+
+# Logs & Temporary Files
+*.log
+logs/
+*.tmp
+.~lock.*
+
+# OS & IDE Junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo

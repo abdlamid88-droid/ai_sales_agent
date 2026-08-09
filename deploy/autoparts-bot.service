@@ -1,0 +1,17 @@
+[Unit]
+Description=Auto Parts WhatsApp AI Sales Agent FastAPI Service
+After=network.target postgresql.service
+
+[Service]
+User=abdel
+WorkingDirectory=/home/abdel/ai_sales_agent
+Environment=PYTHONPATH=/home/abdel/ai_sales_agent
+EnvironmentFile=/home/abdel/ai_sales_agent/.env
+ExecStart=/home/abdel/ai_sales_agent/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8005 --workers 2
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/autoparts-bot.log
+StandardError=append:/var/log/autoparts-bot-error.log
+
+[Install]
+WantedBy=multi-user.target
