@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO)
 
 from app.database import init_db, save_or_update_lead
 from app.services.db_queries import search_part_and_alternatives
+from app.services.hybrid_search import perform_hybrid_part_search
 from app.services.media import process_voice_note, process_part_image
 from app.services.llm import generate_parts_sales_response
 
@@ -215,8 +216,8 @@ async def handle_customer_request(from_number: str, client_name: str, msg_type: 
             
         print(f"Processing request from {from_number} ({client_name}) [{msg_type}]: '{user_query}'")
 
-        # 1. البحث في قاعدة البيانات عن القطعة والبدائل المتقاطعة
-        db_results = await search_part_and_alternatives(user_query)
+        # 1. البحث الهجين (Level 1: Fast-Path + Level 2: Vector + Level 3: Threshold Scoring & Shadow Mode)
+        db_results = await perform_hybrid_part_search(user_query, customer_phone=from_number)
 
         # 2. تسجيل/تحديث العميل والمنتج المهتم به
         matched_product_name = db_results.get("product", {}).get("name_ar") if db_results.get("found") else user_query

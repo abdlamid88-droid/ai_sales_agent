@@ -108,6 +108,16 @@ async def init_db():
                         notes TEXT
                     );
                 ''')
+                await conn.execute('''
+                    CREATE TABLE IF NOT EXISTS unmatched_queries (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        query_text TEXT NOT NULL,
+                        phone TEXT,
+                        confidence_score REAL,
+                        suggested_match TEXT,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                ''')
                 await conn.commit()
                 
                 async with conn.execute('SELECT COUNT(*) FROM products;') as cursor:
@@ -375,12 +385,32 @@ async def save_or_update_lead(phone: str, name: str, product_mention: str):
                 ON CONFLICT (phone) 
                 DO UPDATE SET 
                     name = EXCLUDED.name,
-                    interested_product = CASE 
-                        WHEN EXCLUDED.interested_product IS NOT NULL THEN EXCLUDED.interested_product 
-                        ELSE leads.interested_product 
-                    END,
+                    interested_product = COALESCE(EXCLUDED.interested_product, leads.interested_product),
                     interaction_count = leads.interaction_count + 1,
                     updated_at = CURRENT_TIMESTAMP;
             ''', phone, name, product_mention)
         finally:
             await conn.close()
+
+
+async def log_unmatched_query(query_text: str, phone: str = "", confidence_score: float = 0.0, suggested_match: str = ""):
+    """تسجيل الاستعلامات غير المطابقة لمراجعتها لاحقاً من قبل موظف المبيعات البشرية."""
+    if not query_text:
+        return
+    try:
+        conn = await get_db_connection()
+        if IS_SQLITE or asyncpg is None:
+            await conn.execute('''
+                INSERT INTO unmatched_queries (query_text, phone, confidence_score, suggested_match)
+                VALUES (?, ?, ?, ?);
+            ''', (query_text, phone, confidence_score, suggested_match))
+            await conn.commit()
+            await conn.close()
+        else:
+            await conn.execute('''
+                INSERT INTO unmatched_queries (query_text, phone, confidence_score, suggested_match)
+                VALUES ($1, $2, $3, $4);
+            ''', query_text, phone, confidence_score, suggested_match)
+            await conn.close()
+    except Exception as e:
+        print(f"Error logging unmatched query: {e}")

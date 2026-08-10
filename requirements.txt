@@ -9,5 +9,7 @@ openpyxl>=3.1.2
 aiosqlite>=0.20.0
 asyncpg>=0.29.0
 rapidfuzz>=3.0.0
+qdrant-client>=1.8.0
+openai>=1.14.0
 pytest>=8.0.0
 pytest-asyncio>=0.23.0

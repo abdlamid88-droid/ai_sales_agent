@@ -10,10 +10,11 @@ services:
       - .env
     restart: always
     depends_on:
-      - db  # تأخير تشغيل الويب حتى تعمل قاعدة البيانات
+      - db
+      - qdrant
 
   db:
-    image: ankane/pgvector:latest  # صورة PostgreSQL جاهزة ومدمج معها pgvector
+    image: ankane/pgvector:latest  # PostgreSQL with pgvector extension
     container_name: ai_sales_agent_db
     restart: always
     environment:
@@ -23,7 +24,18 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data  # لحفظ البيانات حتى لو توقفت الحاوية
+      - pgdata:/var/lib/postgresql/data
+
+  qdrant:
+    image: qdrant/qdrant:latest  # Qdrant Vector Search Engine
+    container_name: ai_sales_agent_qdrant
+    restart: always
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
 
 volumes:
   pgdata:
+  qdrant_storage:
