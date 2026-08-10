@@ -102,7 +102,7 @@ class VectorSearchService:
         return self._client
 
     def ensure_collection(self) -> bool:
-        client = self._client
+        client = self.get_client()
         if not client:
             return False
         try:
