@@ -279,7 +279,8 @@ async def _seed_sample_data_sqlite(conn):
         ("1K0129620E", "1k0129620e", "فلتر هواء مان فيلتر C35154", "Filtre à air Mann-Filter C35154", "بديل ممتاذ متوافق من شركة Mann Filter", "https://images.example.com/parts/mann_c35154.jpg", 3200.0, 8),
         ("06L115562A", "06l115562a", "مصفاة زيت (فلتر زيت) - أودي / فولوكسفاغن 2.0 TFSI", "Filtre à huile - Audi / VW 2.0 TFSI", "فلتر زيت أصلي VAG", "https://images.example.com/parts/06l115562a.jpg", 2200.0, 0),
         ("HU7008Z", "hu7008z", "فلتر زيت مان فيلتر HU7008z", "Filtre à huile Mann-Filter HU7008z", "بديل ألمانيا متوفر جودة عالية", "https://images.example.com/parts/hu7008z.jpg", 1900.0, 20),
-        ("5Q0407151A", "5q0407151a", "ذراع تعليق أمامي (Triangle) - سيات ليون / جولف 7", "Triangle de suspension AV - Leon / Golf 7", "مثلث تعليق ألومنيوم جهة اليمين", "https://images.example.com/parts/5q0407151a.jpg", 14500.0, 4)
+        ("5Q0407151A", "5q0407151a", "ذراع تعليق أمامي (Triangle) - سيات ليون / جولف 7", "Triangle de suspension AV - Leon / Golf 7", "مثلث تعليق ألومنيوم جهة اليمين", "https://images.example.com/parts/5q0407151a.jpg", 14500.0, 4),
+        ("S11-3704010", "s113704010", "قفل التشغيل (انتافول / نيمان) - شيري كيو كيو (Chery QQ)", "Antivol de direction (Neiman) - Chery QQ", "قفل تشغيل ونيمان أصلي شيري كيو كيو Antivol Chery QQ", "https://images.example.com/parts/s113704010.jpg", 4500.0, 10)
     ]
     
     for p in products:

@@ -18,18 +18,25 @@ STOP_WORDS = {
     'خي', 'خويا', 'في', 'على', 'ما', 'هو', 'هي', 'لو', 'سمحت', 'عندك', 'تتوفر', 'متوفر',
     'كاين', 'كاينش', 'بياسة', 'البياسة', 'شحال', 'بشحال', 'سومة', 'السومة', 'راني', 'نحوس',
     'متوفرة', 'متاحة', 'موجودة', 'الرسالة', 'رسالة', 'رسائل', 'الرسائل', 'جوابا', 'جواب', 'نتلق',
-    'هناك', 'مشكل', 'مشكلة', 'أعقد', 'اعقد', 'اللهجة', 'الجزائرية', 'قبل', 'يجيب', 'مثل', 'عدم', 'رد', 'الرد'
+    'هناك', 'مشكل', 'مشكلة', 'أعقد', 'اعقد', 'اللهجة', 'الجزائرية', 'قبل', 'يجيب', 'مثل', 'عدم', 'رد', 'الرد',
+    'نحتاج', 'خصني', 'بغيت', 'حاب', 'حابة', 'نعرف', 'شوف', 'قل', 'قولي', 'تاع', 'ديال', 'تاعي', 'بدنا'
 }
 
 PART_TYPE_KEYWORDS = [
     'ARBRA', 'ARBRE', 'CAME', 'AMORTIS', 'FILTR', 'DURIT', 'ALTERN', 'POMPE', 
-    'PLAQUET', 'DISQ', 'AILE', 'AIL', 'BOUGIE', 'RADIAT', 'FAR', 'FEU', 'PARE'
+    'PLAQUET', 'DISQ', 'AILE', 'AIL', 'BOUGIE', 'RADIAT', 'FAR', 'FEU', 'PARE',
+    'ANTIVOL', 'NEIMAN', 'NIMAN', 'LOCK', 'STARTER', 'DEMAR', 'SERPENT',
+    'مساعد', 'قفل', 'نيمان', 'انتفول', 'انتيفول', 'امورتيسور', 'دينامو', 'دومار',
+    'بوجي', 'ديسك', 'بلاكيط', 'روتيل', 'بيالاط', 'فلتر', 'فيلتر'
 ]
 
 CAR_MODELS = [
     'CIELO', 'LANOS', 'RACER', 'AVEO', 'OPTRA', 'SAIL', 'ACCENT', 'SWIFT', 'ATOS', 'PIC', 
     'SPARK', 'MARUTI', 'ALTO', 'TUC', 'SPORTGE', 'GOLF', 'PASSAT', 'RIO', 'CERATO', 
-    'ELANTRA', 'CRETA', 'SANTAFE', 'CARENS', 'MATRIX', 'I30', 'NUB', 'LANOS'
+    'ELANTRA', 'CRETA', 'SANTAFE', 'CARENS', 'MATRIX', 'I30', 'NUB', 'LANOS',
+    'QQ', 'CHERY', 'كيو', 'كيوكيو', 'شيري', 'كوكو', 'CLIO', 'كليو', 'SYMBOL', 'سيمبول',
+    'MEGANE', 'ميغان', 'LOGAN', 'لوغان', 'STEPWAY', 'ستيبواي', 'DUSTER', 'داستر',
+    'YARIS', 'ياريس', 'I20', 'I10', 'PICANTO', 'بيكانتو', 'POLO', 'بولو', 'LEON', 'ليون'
 ]
 
 def clean_input_text(text: str) -> str:
@@ -68,7 +75,7 @@ async def search_part_and_alternatives(query_text: str) -> dict:
         matcher = get_part_matcher()
         res = matcher.find_part(raw_query)
         if res:
-            for extra_kw in [res.standard_ar, res.standard_en, res.matched_synonym]:
+            for extra_kw in [res.standard_ar, res.standard_en, res.matched_synonym, res.category]:
                 if extra_kw and extra_kw not in keywords:
                     keywords.append(extra_kw)
     except Exception as exc:
@@ -126,22 +133,20 @@ async def _search_part_sqlite(raw_query: str, cleaned_query: str, keywords: list
                         
                         if primary_type:
                             if primary_type.upper() in p_text:
+                                score += 15
+                            elif any(pt in p_text for pt in PART_TYPE_KEYWORDS if pt in primary_type.upper()):
                                 score += 10
-                            else:
-                                continue # Must contain primary part type if provided in query
                                 
                         if detected_models:
                             matched_m = False
                             for m in detected_models:
                                 if m.upper() in p_text:
-                                    score += 5
+                                    score += 10
                                     matched_m = True
-                            if not matched_m:
-                                continue # Must contain at least one specified car model if provided
-                                
+                                    
                         for kw in keywords:
                             if kw.upper() in p_text:
-                                score += 2
+                                score += 3
                                 
                         if score > best_score:
                             best_score = score
