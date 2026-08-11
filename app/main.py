@@ -202,7 +202,15 @@ async def handle_customer_request(from_number: str, client_name: str, msg_type: 
         elif msg_type in ["audio", "voice"]:
             media_id = message_data.get("audio", {}).get("id") or message_data.get("voice", {}).get("id")
             if media_id:
-                user_query = await process_voice_note(media_id)
+                # 1. تنزيل الملف الصوتي إلى المجلد المحلي media/audio/
+                from app.services.media import download_whatsapp_audio
+                from app.services.stt import transcribe_audio_openai
+                local_audio_path = await download_whatsapp_audio(media_id)
+                if local_audio_path:
+                    user_query = transcribe_audio_openai(local_audio_path)
+                # 2. الاحتياط المباشر في حال عدم تهيئة OpenAI أو إرجاع نص فارغ
+                if not user_query:
+                    user_query = await process_voice_note(media_id)
                 
         elif msg_type == "image":
             media_id = message_data.get("image", {}).get("id")

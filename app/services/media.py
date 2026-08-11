@@ -57,6 +57,39 @@ async def fetch_whatsapp_media_bytes(media_id: str) -> tuple[bytes, str]:
             
         return media_resp.content, mime_type
 
+async def download_whatsapp_audio(media_id: str) -> str | None:
+    """
+    تنزيل التسجيل الصوتي من WhatsApp وحفظه كملف محلي في المجلد media/audio/
+    يرجع المسار الكامل للملف الصوتي المحلي أو None عند الفشل.
+    """
+    try:
+        audio_bytes, mime_type = await fetch_whatsapp_media_bytes(media_id)
+        if not audio_bytes:
+            return None
+
+        ext = "ogg"
+        clean_mime = mime_type.split(";")[0].strip().lower() if mime_type else ""
+        if "mp3" in clean_mime:
+            ext = "mp3"
+        elif "m4a" in clean_mime or "mp4" in clean_mime or "aac" in clean_mime:
+            ext = "m4a"
+        elif "wav" in clean_mime:
+            ext = "wav"
+
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        audio_dir = os.path.join(project_root, "media", "audio")
+        os.makedirs(audio_dir, exist_ok=True)
+
+        file_path = os.path.join(audio_dir, f"{media_id}.{ext}")
+        with open(file_path, "wb") as f:
+            f.write(audio_bytes)
+
+        logging.info("[AUDIO_DOWNLOAD] Saved WhatsApp audio to %s", file_path)
+        return file_path
+    except Exception as exc:
+        logging.error("[AUDIO_DOWNLOAD] Failed to download WhatsApp audio (media_id=%s): %s", media_id, exc)
+        return None
+
 async def process_voice_note(media_id: str) -> str:
     """تنزيل التسجيل الصوتي وتحويله إلى نص باستخدام Gemini Multimodal API (Speech-to-Text)"""
     try:
