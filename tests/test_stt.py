@@ -1,5 +1,5 @@
 """
-Unit tests for Speech-to-Text (STT) Service with OpenAI Whisper API integration.
+Unit tests for Speech-to-Text (STT) Service with Groq (Whisper-Large-v3) & OpenAI Whisper API integration.
 """
 
 import os
@@ -8,9 +8,13 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from app.services.stt import (
+    transcribe_audio_groq,
+    transcribe_audio_groq_async,
     transcribe_audio_openai,
     transcribe_audio_openai_async,
-    AUTO_PARTS_PROMPT
+    AUTO_PARTS_PROMPT,
+    GROQ_WHISPER_MODEL,
+    OPENAI_WHISPER_MODEL
 )
 from app.services.media import download_whatsapp_audio
 
@@ -27,26 +31,80 @@ class TestSTTService(unittest.IsolatedAsyncioTestCase):
     def tearDown(self):
         self.temp_dir.cleanup()
 
-    def test_transcribe_audio_openai_missing_file(self):
+    # --- Groq STT Tests ---
+
+    def test_transcribe_audio_groq_missing_file(self):
         # Test non-existent file path
+        res = transcribe_audio_groq("/tmp/non_existent_audio_file_12345.ogg")
+        self.assertEqual(res, "")
+
+    def test_transcribe_audio_groq_empty_path(self):
+        # Test empty string path
+        res = transcribe_audio_groq("")
+        self.assertEqual(res, "")
+
+    @patch.dict(os.environ, {}, clear=True)
+    def test_transcribe_audio_groq_missing_api_key(self):
+        # Test when GROQ_API_KEY is not configured
+        res = transcribe_audio_groq(self.fake_audio_path)
+        self.assertEqual(res, "")
+
+    @patch("app.services.stt.Groq")
+    @patch.dict(os.environ, {"GROQ_API_KEY": "gsk_fake_test_key_12345"})
+    def test_transcribe_audio_groq_success(self, mock_groq_cls):
+        # Mock Groq Client & Audio Transcription response
+        mock_client = MagicMock()
+        mock_groq_cls.return_value = mock_client
+        
+        mock_transcript = MagicMock()
+        mock_transcript.text = "نحتاج انتفول طاكسي كيو كيو"
+        mock_client.audio.transcriptions.create.return_value = mock_transcript
+
+        result = transcribe_audio_groq(self.fake_audio_path)
+        
+        self.assertEqual(result, "نحتاج انتفول طاكسي كيو كيو")
+        mock_client.audio.transcriptions.create.assert_called_once()
+        
+        call_kwargs = mock_client.audio.transcriptions.create.call_args.kwargs
+        self.assertEqual(call_kwargs.get("model"), "whisper-large-v3")
+        self.assertEqual(call_kwargs.get("prompt"), AUTO_PARTS_PROMPT)
+
+    @patch("app.services.stt.AsyncGroq")
+    @patch.dict(os.environ, {"GROQ_API_KEY": "gsk_fake_test_key_12345"})
+    async def test_transcribe_audio_groq_async_success(self, mock_async_groq_cls):
+        # Mock AsyncGroq Client
+        mock_client = MagicMock()
+        mock_async_groq_cls.return_value = mock_client
+        
+        mock_transcript = MagicMock()
+        mock_transcript.text = "خصني امورتيسورات جولف 7"
+        
+        async def mock_create(**kwargs):
+            return mock_transcript
+
+        mock_client.audio.transcriptions.create = mock_create
+
+        result = await transcribe_audio_groq_async(self.fake_audio_path)
+        self.assertEqual(result, "خصني امورتيسورات جولف 7")
+
+    # --- OpenAI STT Tests ---
+
+    def test_transcribe_audio_openai_missing_file(self):
         res = transcribe_audio_openai("/tmp/non_existent_audio_file_12345.ogg")
         self.assertEqual(res, "")
 
     def test_transcribe_audio_openai_empty_path(self):
-        # Test empty string path
         res = transcribe_audio_openai("")
         self.assertEqual(res, "")
 
     @patch.dict(os.environ, {}, clear=True)
     def test_transcribe_audio_openai_missing_api_key(self):
-        # Test when OPENAI_API_KEY is not configured
         res = transcribe_audio_openai(self.fake_audio_path)
         self.assertEqual(res, "")
 
     @patch("app.services.stt.OpenAI")
     @patch.dict(os.environ, {"OPENAI_API_KEY": "sk-fake-test-key"})
     def test_transcribe_audio_openai_success(self, mock_openai_cls):
-        # Mock OpenAI Client & Audio Transcription response
         mock_client = MagicMock()
         mock_openai_cls.return_value = mock_client
         
@@ -66,7 +124,6 @@ class TestSTTService(unittest.IsolatedAsyncioTestCase):
     @patch("app.services.stt.AsyncOpenAI")
     @patch.dict(os.environ, {"OPENAI_API_KEY": "sk-fake-test-key"})
     async def test_transcribe_audio_openai_async_success(self, mock_async_openai_cls):
-        # Mock AsyncOpenAI Client
         mock_client = MagicMock()
         mock_async_openai_cls.return_value = mock_client
         
@@ -96,7 +153,6 @@ class TestSTTService(unittest.IsolatedAsyncioTestCase):
             content = f.read()
         self.assertEqual(content, b"fake_audio_bytes_content")
 
-        # Clean up created file
         if os.path.exists(file_path):
             os.remove(file_path)
 
